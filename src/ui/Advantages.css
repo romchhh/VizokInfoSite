@@ -1,0 +1,7 @@
+.advantage-item {
+    transition: transform 0.3s ease;
+}
+
+.advantage-item:hover {
+    transform: scale(1.1);
+}

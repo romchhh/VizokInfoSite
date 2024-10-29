@@ -1,0 +1,188 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+    body {
+        font-family: 'Montserrat', sans-serif;
+    }
+    * {
+        box-sizing: border-box;
+    }
+}
+
+@layer components {
+    .logo {
+        color: black;
+        /* Text color */
+        text-shadow: -1px -1px 0px white, /* Top left */
+        1px -1px 0px white, /* Top right */
+        -1px 1px 0px white, /* Bottom left */
+        1px 1px 0px white;
+        /* Bottom right */
+        letter-spacing: 3px;
+    }
+    .hero {
+        background-image: url('hero.JPG');
+        background-position: center;
+        background-size: cover;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .custom-input {
+        position: relative;
+    }
+    .custom-input label {
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+        left: 15px;
+        font-size: 16px;
+        pointer-events: none;
+        color: white;
+        padding: 0 10px;
+        transition: 0.5s;
+    }
+    .custom-input input {
+        color: white;
+        font-size: 18px;
+        padding: 0 15px;
+        background: transparent;
+        border: 2px solid white;
+        outline: none;
+        border-radius: 15px;
+    }
+    .custom-input input:focus~label,
+    .custom-input input:valid~label {
+        top: 0;
+        background-color: #d60100;
+        font-size: 14px;
+    }
+    .about {
+        background-image: url('about.jpg');
+        background-size: auto 100%;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+    .about::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 75%;
+        height: 100%;
+        background: linear-gradient( to left, rgba(255, 255, 255, 1) 52%, rgba(255, 255, 255, 0.5) 80%, rgba(255, 255, 255, 0) 100%);
+    }
+    @media (max-width: 1500px) {
+        .about::before {
+            background: linear-gradient( to left, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.5) 80%, rgba(255, 255, 255, 0) 100%);
+        }
+    }
+    @media (max-width: 1280px) {
+        .about::before {
+            background: linear-gradient( to left, rgba(255, 255, 255, 1) 60%, rgba(255, 255, 255, 0.5) 80%, rgba(255, 255, 255, 0) 100%);
+        }
+    }
+    .advantages {
+        background-image: url('hero.JPG');
+        background-size: cover;
+        background-repeat: no-repeat;
+        position: relative;
+        background-position: center;
+        background-attachment: fixed;
+    }
+    .socials {
+        background-image: url('hero.JPG');
+        background-size: cover;
+        background-repeat: no-repeat;
+        position: relative;
+        background-position: center;
+        background-attachment: fixed;
+    }
+    .reviews {
+        background-image: url('hero.JPG');
+        background-size: cover;
+        background-repeat: no-repeat;
+        position: relative;
+        background-position: center;
+        background-attachment: fixed;
+    }
+    @media (max-width: 1024px) {
+        .about::before {
+            width: 100%;
+        }
+    }
+    @media (max-width: 768px) {
+        .about::before {
+            width: 100%;
+            background-color: white;
+        }
+    }
+}
+
+@layer utilities {
+    .container {
+        margin: 0 auto;
+    }
+    .active {
+        position: relative;
+    }
+    .active::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: #d60100;
+    }
+    .active-navbar {
+        top: 0;
+    }
+    @media (min-width: 576px) {
+        .container {
+            max-width: 540px;
+        }
+    }
+    @media (max-width: 576px) {
+        .container {
+            padding: 0 15px;
+        }
+    }
+    @media (min-width: 768px) {
+        .container {
+            max-width: 720px;
+        }
+    }
+    @media (min-width: 992px) {
+        .container {
+            max-width: 960px;
+        }
+    }
+    @media (min-width: 1200px) {
+        .container {
+            max-width: 1140px;
+        }
+    }
+    @media (min-width: 1400px) {
+        .container {
+            max-width: 1320px;
+        }
+    }
+    @media (min-width: 1536px) {
+        .container {
+            max-width: 1440px;
+        }
+    }
+}
+
+.advantage-item {
+    transition: transform 0.3s ease;
+}
+
+.advantage-item:hover {
+    transform: scale(1.05);
+}
