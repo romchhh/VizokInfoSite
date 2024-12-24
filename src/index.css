@@ -22,8 +22,7 @@
         letter-spacing: 3px;
     }
     .hero {
-        background-image: url('hero.JPG');
-        background-position: center;
+        background-image: url('Group 19.png');
         background-size: cover;
         background-attachment: fixed;
         background-repeat: no-repeat;
@@ -31,35 +30,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-    }
-    .custom-input {
-        position: relative;
-    }
-    .custom-input label {
-        position: absolute;
-        transform: translateY(-50%);
-        top: 50%;
-        left: 15px;
-        font-size: 16px;
-        pointer-events: none;
-        color: white;
-        padding: 0 10px;
-        transition: 0.5s;
-    }
-    .custom-input input {
-        color: white;
-        font-size: 18px;
-        padding: 0 15px;
-        background: transparent;
-        border: 2px solid white;
-        outline: none;
-        border-radius: 15px;
-    }
-    .custom-input input:focus~label,
-    .custom-input input:valid~label {
-        top: 0;
-        background-color: #d60100;
-        font-size: 14px;
     }
     .about {
         background-image: url('about.jpg');
@@ -76,18 +46,26 @@
         height: 100%;
         background: linear-gradient( to left, rgba(255, 255, 255, 1) 52%, rgba(255, 255, 255, 0.5) 80%, rgba(255, 255, 255, 0) 100%);
     }
-    @media (max-width: 1500px) {
+    @media (max-width: 768px) {
+        .hero {
+            background-attachment: scroll;
+            background-position: center;
+        }
         .about::before {
-            background: linear-gradient( to left, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.5) 80%, rgba(255, 255, 255, 0) 100%);
+            background: linear-gradient(to left, rgba(255, 255, 255, 1) 60%, rgba(255, 255, 255, 0.5) 80%, rgba(255, 255, 255, 0) 100%);
         }
     }
     @media (max-width: 1280px) {
+        .hero {
+            background-attachment: scroll;
+            background-position: center;
+        }
         .about::before {
             background: linear-gradient( to left, rgba(255, 255, 255, 1) 60%, rgba(255, 255, 255, 0.5) 80%, rgba(255, 255, 255, 0) 100%);
         }
     }
     .advantages {
-        background-image: url('hero.JPG');
+        background-image: url('Group 19.png');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -95,7 +73,7 @@
         background-attachment: fixed;
     }
     .socials {
-        background-image: url('hero.JPG');
+        background-image: url('Group 19.png');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -103,7 +81,7 @@
         background-attachment: fixed;
     }
     .reviews {
-        background-image: url('hero.JPG');
+        background-image: url('Group 19.png');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -111,15 +89,87 @@
         background-attachment: fixed;
     }
     @media (max-width: 1024px) {
+        .socials {
+            background-attachment: scroll;
+            background-position: center;
+        }
+        .advantages {
+            background-attachment: scroll;
+        }
         .about::before {
             width: 100%;
         }
     }
     @media (max-width: 768px) {
+        .socials {
+            background-attachment: scroll;
+            background-position: center;
+        }
+        .advantages {
+            background-attachment: scroll;
+        }
         .about::before {
             width: 100%;
             background-color: white;
         }
+    }
+    /* Services.css */
+    .service-icon {
+        color: #ffffff;
+    }
+    .container {
+        width: 90%;
+        max-width: 1200px;
+    }
+    .service-item {
+        transition: all 0.3s ease-in-out;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .service-item:hover {
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
+    .service-item .service-icon-container {
+        font-size: 36px;
+        color: #4a90e2;
+    }
+    h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+    p {
+        font-size: 1rem;
+        color: #666;
+    }
+    /* ServiceItem.css */
+    .service-icon {
+        font-size: 36px;
+        color: #4a90e2;
+        margin-bottom: 10px;
+    }
+    .service-item {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        transition: all 0.3s ease-in-out;
+    }
+    .service-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+    .service-item h3 {
+        color: #2f2f2f;
+        margin-top: 10px;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+    .service-item p {
+        color: #777;
+        font-size: 1rem;
     }
 }
 

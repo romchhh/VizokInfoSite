@@ -1,4 +1,4 @@
-import { FaInstagram, FaTelegram, FaTiktok } from 'react-icons/fa';
+import { FaInstagram, FaTelegram, FaFacebook } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 
@@ -10,18 +10,23 @@ function Socials() {
 					Наш блог
 				</h2>
 				<p className='text-center text-black py-10 text-xl '>
-					Підписуйся на наші соціальні мережі і стеж за новинками з світу чат-ботів
+					Підписуйся на наші соціальні мережі і стеж за новинками Vizok
 				</p>
 				<div className='flex justify-center gap-10 flex-wrap'>
 
-				<Link to='https://www.instagram.com/telebotsnowayrm' target="_blank" rel="noopener noreferrer">
+				<Link to='https://www.instagram.com/vizok.info/' target="_blank" rel="noopener noreferrer">
 				<Button className='text-white'>
 					<FaInstagram size={24} />
 				</Button>
 			</Link>
-			<Link to='https://t.me/nowayrm' target="_blank" rel="noopener noreferrer">
+			<Link to='https://t.me/VizokUAbot' target="_blank" rel="noopener noreferrer">
 				<Button className='text-white bg-[#24A1DE] hover:bg-blue-400'>
 					<FaTelegram size={24} />
+				</Button>
+			</Link>
+			<Link to='https://www.facebook.com/share/tWAGUjTfjAxxmi3a/?mibextid=LQQJ4d' target="_blank" rel="noopener noreferrer">
+				<Button className='text-white bg-[#24A1DE] hover:bg-blue-400'>
+					<FaFacebook size={24} />
 				</Button>
 			</Link>
 
@@ -32,6 +37,9 @@ function Socials() {
 					</article>
 					<article className='overflow-hidden rounded-xl inline-block'>
 						<img src='tg.jpg' alt='telegram' className='max-h-[500px]' />
+					</article>
+					<article className='overflow-hidden rounded-xl inline-block'>
+						<img src='fb.jpg' alt='telegram' className='max-h-[500px]' />
 					</article>
 
 				</div>

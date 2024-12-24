@@ -19,7 +19,7 @@ function Navbar() {
 				<CustomNavLink to='#advantages'>Переваги</CustomNavLink>
 			</li>
 			<li>
-				<CustomNavLink to='#portfolio'>Портфоліо</CustomNavLink>
+				<CustomNavLink to='#portfolio'>Розіграші</CustomNavLink>
 			</li>
 			<li>
 				<CustomNavLink to='#reviews'>Відгуки</CustomNavLink>

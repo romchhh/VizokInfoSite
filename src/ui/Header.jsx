@@ -37,8 +37,8 @@ function Header() {
 					onClick={scrollToTop}
 					className='z-30 relative flex items-end xl:text-4xl text-2xl uppercase font-medium gap-2 cursor-pointer'
 				>
-					<img src='logo.png' alt='logo' className='xl:max-h-20 max-h-14' />
-					<span className='xl:py-4 py-2 font-oswald logo'>telebots</span>
+					<img src='logo.png' alt='telegram_logo' className='xl:max-h-20 max-h-14' />
+					<span className='xl:py-4 py-2 font-oswald logo'>Vizok</span>
 				</div>
 				<div
 					className={`flex lg:justify-between flex-1 justify-center items-center lg:relative fixed lg:bg-transparent bg-white flex-col lg:flex-row z-40 w-full h-full top-[-100%] left-0 gap-10 lg:gap-0 duration-500 ${
@@ -50,7 +50,7 @@ function Header() {
 					</nav>
 					<div className='2xl:max-w-[500px] xl:max-w-[400px] xl:w-full flex justify-center text-white'>
 						<a href='https://t.me/nowayrm' target='_blank' rel='noopener noreferrer'>
-							<Button>Зв'яжіться з нами</Button>
+							<Button>Знайти поїздку</Button>
 						</a>
 					</div>
 				</div>

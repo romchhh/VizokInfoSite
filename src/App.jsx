@@ -10,6 +10,7 @@ import Socials from './ui/Socials';
 import Reviews from './ui/Reviews';
 import Portfolio from './ui/Portfolio';
 import Footer from './ui/Footer';
+import Prices from './ui/Prices';
 
 function App() {
 	return (
@@ -21,6 +22,7 @@ function App() {
 					<Hero />
 					<About />
 					<Advantages />
+					<Prices/>
 					<Purchase />
 					<Socials />
 					<Portfolio />
