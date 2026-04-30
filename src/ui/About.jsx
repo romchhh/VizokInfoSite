@@ -21,28 +21,29 @@ function About() {
             <h2 className='text-5xl font-bold text-center'>
               <br />Про нас
             </h2>
-            <p className='text-lg font-semibold'>
+            <p className='text-xl font-semibold'>
               Ми створили цей сервіс, щоб зробити ваші поїздки комфортними, зручними та безпечними! 🚗
             </p>
-            <p className='text-lg font-semibold'>
+            <p className='text-xl font-semibold'>
               🌍 <strong>Що пропонує наш бот?</strong>
             </p>
-            <p className='text-lg'>
+            <p className='text-xl'>
               <strong>Для водіїв:</strong>
               <ul className='list-disc pl-6'>
                 <li>Легке створення пропозицій поїздок із детальним описом маршруту, часу та інформації про автомобіль.</li>
                 <li>Зручний перегляд і редагування своїх поїздок у будь-який час.</li>
               </ul>
             </p>
-            <p className='text-lg'>
+            <p className='text-xl'>
               <strong>Для пасажирів:</strong>
               <ul className='list-disc pl-6'>
                 <li>Швидкий пошук поїздок за маршрутом, датою та іншими параметрами.</li>
+                <li>Можливість напряму зв'язатися з водієм.</li>
                 <li>Перегляд детальної інформації про водія та транспортний засіб.</li>
                 <li>Можливість залишати відгуки про водія навіть якщо поїздка не відбулась.</li>
               </ul>
             </p>
-            <p className='text-lg font-semibold'>
+            <p className='text-xl font-semibold'>
               📞 <strong>Якщо у вас є питання чи пропозиції, звертайтеся до нашої підтримки:</strong>{' '}
               <a
                 href='https://t.me/Pavlo_Gromada'

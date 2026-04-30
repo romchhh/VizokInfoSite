@@ -1,0 +1,398 @@
+/* CreateRoute Component Styles */
+.create-route-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.create-route-wrapper {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.create-route-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.create-route-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--tg-theme-text-color, #000000);
+}
+
+.create-route-header p {
+    font-size: 16px;
+    color: var(--tg-theme-hint-color, #999999);
+    line-height: 1.4;
+}
+
+.create-route-form-group {
+    margin-bottom: 12px;
+}
+
+.create-route-form-group label {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--tg-theme-text-color, #000000);
+}
+
+.create-route-city-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid var(--tg-theme-button-color, #0088cc);
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    background: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    transition: border-color 0.3s ease;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.create-route-city-input:focus {
+    outline: none;
+    border-color: var(--tg-theme-button-color, #0088cc);
+    box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.1);
+}
+
+.create-route-city-input::placeholder {
+    color: var(--tg-theme-hint-color, #999999);
+}
+
+.create-route-stops-container {
+    margin-bottom: 10px;
+}
+
+.create-route-stop-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    padding: 4px 6px;
+    background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+.create-route-stop-number {
+    background: var(--tg-theme-button-color, #0088cc);
+    color: white;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 9px;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
+.create-route-stop-content {
+    flex: 1;
+}
+
+.create-route-stop-name {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--tg-theme-text-color, #000000);
+    margin-bottom: 0px;
+    line-height: 1.1;
+}
+
+.create-route-stop-country {
+    font-size: 10px;
+    color: var(--tg-theme-hint-color, #666666);
+    line-height: 1.1;
+}
+
+.create-route-remove-stop {
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.create-route-remove-stop:hover {
+    background: #cc0000;
+}
+
+.create-route-add-stop-container {
+    position: relative;
+}
+
+.create-route-add-stop-btn {
+    width: 100%;
+    padding: 15px;
+    background: transparent;
+    color: var(--tg-theme-button-color, #0088cc);
+    border: 2px dashed var(--tg-theme-button-color, #0088cc);
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.create-route-add-stop-btn:hover {
+    background: var(--tg-theme-button-color, #0088cc);
+    color: white;
+}
+
+.create-route-suggestions-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--tg-theme-bg-color, #ffffff);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 1px;
+}
+
+.create-route-suggestion-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+}
+
+.create-route-suggestion-item:hover {
+    background: var(--tg-theme-button-color, #0088cc);
+    color: white;
+}
+
+.create-route-suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.create-route-suggestion-item.manual-add {
+    background: #f8f9fa;
+    border-top: 1px solid #e0e0e0;
+}
+
+.create-route-suggestion-item.manual-add:hover {
+    background: #e9ecef;
+    color: var(--tg-theme-text-color, #000000);
+}
+
+.create-route-suggestion-name {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.create-route-suggestion-country {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.create-route-suggestion-manual {
+    font-weight: 600;
+    color: var(--tg-theme-button-color, #0088cc);
+}
+
+.create-route-suggestion-manual-desc {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.create-route-example {
+    background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+    border-left: 4px solid var(--tg-theme-button-color, #0088cc);
+}
+
+.create-route-example h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--tg-theme-text-color, #000000);
+}
+
+.create-route-example p {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color, #666666);
+    line-height: 1.4;
+}
+
+.create-route-city-count {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color, #999999);
+    margin-top: 5px;
+}
+
+.create-route-submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.create-route-submit-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.create-route-submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.create-route-error {
+    color: #ff3333;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.create-route-success {
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.create-route-success-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.create-route-success-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.create-route-return-btn {
+    background: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, white);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+    width: 100%;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    box-sizing: border-box;
+    transition: opacity 0.2s ease;
+}
+
+.create-route-return-btn:hover {
+    opacity: 0.9;
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+    .create-route-container {
+        padding: 15px;
+    }
+    
+    .create-route-header h1 {
+        font-size: 20px;
+    }
+    
+    .create-route-city-input {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* Ще менші зупинки на мобільних */
+    .create-route-stop-item {
+        margin-bottom: 3px;
+        padding: 3px 4px;
+    }
+    
+    .create-route-stop-number {
+        width: 14px;
+        height: 14px;
+        font-size: 8px;
+        margin-right: 4px;
+    }
+    
+    .create-route-stop-name {
+        font-size: 11px;
+    }
+    
+    .create-route-stop-country {
+        font-size: 9px;
+    }
+    
+    .create-route-remove-stop {
+        width: 14px;
+        height: 14px;
+        font-size: 9px;
+        margin-left: 3px;
+    }
+}
+
+/* Hide suggestions when not needed */
+.create-route-suggestions-hidden {
+    display: none;
+}
+
+/* Loading state */
+.create-route-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Focus states for accessibility */
+.create-route-city-input:focus,
+.create-route-add-stop-btn:focus,
+.create-route-submit-btn:focus,
+.create-route-remove-stop:focus {
+    outline: 2px solid var(--tg-theme-button-color, #0088cc);
+    outline-offset: 2px;
+}
+
+/* Animation for adding/removing stops */
+.create-route-stop-item {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} 

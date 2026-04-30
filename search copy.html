@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пошук поїздки</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--tg-theme-text-color, #000000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            color: var(--tg-theme-hint-color, #999999);
+            line-height: 1.4;
+        }
+        
+        .search-form {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--tg-theme-text-color, #000000);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .city-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--tg-theme-button-color, #0088cc);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .city-input:focus {
+            outline: none;
+            border-color: var(--tg-theme-button-color, #0088cc);
+            box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.1);
+        }
+        
+        .city-input::placeholder {
+            color: var(--tg-theme-hint-color, #999999);
+        }
+        
+        .arrow-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .arrow {
+            background: var(--tg-theme-button-color, #0088cc);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background: var(--tg-theme-button-color, #006699);
+            transform: translateY(-1px);
+        }
+        
+        .submit-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .example {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid var(--tg-theme-button-color, #0088cc);
+        }
+        
+        .example h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--tg-theme-text-color, #000000);
+        }
+        
+        .example p {
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #666666);
+            line-height: 1.4;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--tg-theme-button-color, #0088cc);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #ffe6e6;
+            color: #cc0000;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #ffcccc;
+            display: none;
+        }
+        
+        .success {
+            background: #e6ffe6;
+            color: #008800;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccffcc;
+            display: none;
+        }
+        
+        .city-input-container {
+            position: relative;
+        }
+        
+        .city-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--tg-theme-bg-color, #ffffff);
+            border: 2px solid var(--tg-theme-button-color, #0088cc);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .suggestion-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.2s ease;
+            color: var(--tg-theme-text-color, #000000);
+        }
+        
+        .suggestion-item:hover,
+        .suggestion-item.selected {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .suggestion-city {
+            font-weight: 600;
+        }
+        
+        .suggestion-country {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: var(--tg-theme-hint-color, #999999);
+            z-index: 1;
+        }
+        
+        .city-input.with-icon {
+            padding-left: 50px;
+        }
+        
+        .swap-btn {
+            background: transparent;
+            border: 2px solid var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-color, #0088cc);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .swap-btn:hover {
+            background: var(--tg-theme-button-color, #0088cc);
+            color: white;
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Пошук поїздки</h1>
+            <p>Оберіть початкову та кінцеву точки вашої поїздки</p>
+        </div>
+
+        <form class="search-form" id="searchForm">
+            <div class="form-group">
+                <label for="startCity">
+                    📍 Звідки
+                </label>
+                <div class="city-input-container">
+                    <div class="input-group">
+                        <span class="input-icon">🚩</span>
+                        <input type="text" 
+                               id="startCity" 
+                               name="startCity" 
+                               class="city-input with-icon" 
+                               placeholder="Введіть місто відправлення" 
+                               required autocomplete="off">
+                    </div>
+                    <div id="startCitySuggestions" class="city-suggestions"></div>
+                </div>
+            </div>
+
+            <div class="arrow-container">
+                <button type="button" class="swap-btn" onclick="swapCities()" title="Поміняти місцями">
+                    ⇅
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label for="endCity">
+                    🎯 Куди
+                </label>
+                <div class="city-input-container">
+                    <div class="input-group">
+                        <span class="input-icon">🏁</span>
+                        <input type="text" 
+                               id="endCity" 
+                               name="endCity" 
+                               class="city-input with-icon" 
+                               placeholder="Введіть місто призначення" 
+                               required autocomplete="off">
+                    </div>
+                    <div id="endCitySuggestions" class="city-suggestions"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                🔍 Почати пошук
+            </button>
+        </form>
+
+        <div class="example">
+            <h3>💡 Приклади маршрутів:</h3>
+            <p>• Київ → Варшава<br>
+               • Львів → Краків<br>
+               • Одеса → Бухарест<br>
+               • Харків → Братислава</p>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Обробляємо ваш запит...</p>
+        </div>
+
+        <div class="error" id="error"></div>
+        <div class="success" id="success"></div>
+    </div>
+
+    <script>
+        // Переклади для інтерфейсу
+        const translations = {
+            uk: {
+                title: '🔍 Пошук поїздки',
+                subtitle: 'Оберіть початкову та кінцеву точки вашої поїздки',
+                from_label: '📍 Звідки',
+                to_label: '🎯 Куди',
+                from_placeholder: 'Введіть місто відправлення',
+                to_placeholder: 'Введіть місто призначення',
+                swap_title: 'Поміняти місцями',
+                search_button: '🔍 Почати пошук',
+                examples_title: '💡 Приклади маршрутів:',
+                examples_text: '• Київ → Варшава<br>• Львів → Краків<br>• Одеса → Бухарест<br>• Харків → Братислава',
+                processing: 'Обробляємо ваш запит...',
+                processing_button: 'Обробляємо...',
+                error_fill_both: 'Будь ласка, заповніть обидва поля',
+                error_same_cities: 'Початкове та кінцеве місто не можуть бути однаковими',
+                error_too_short: 'Назва міста повинна містити мінімум 2 символи',
+                error_too_long: 'Назва міста занадто довга (максимум 50 символів)',
+                success_message: '✅ Пошук надіслано! Маршрут: {start} → {end}',
+                success_alert: 'Запит на пошук надіслано! Очікуйте результати в боті.',
+                return_to_bot: 'Повернутися в бот',
+                error_prefix: '❌ Помилка: '
+            },
+            en: {
+                title: '🔍 Trip Search',
+                subtitle: 'Select your trip start and end points',
+                from_label: '📍 From',
+                to_label: '🎯 To',
+                from_placeholder: 'Enter departure city',
+                to_placeholder: 'Enter destination city',
+                swap_title: 'Swap places',
+                search_button: '🔍 Start Search',
+                examples_title: '💡 Route Examples:',
+                examples_text: '• Kyiv → Warsaw<br>• Lviv → Krakow<br>• Odesa → Bucharest<br>• Kharkiv → Bratislava',
+                processing: 'Processing your request...',
+                processing_button: 'Processing...',
+                error_fill_both: 'Please fill in both fields',
+                error_same_cities: 'Start and end cities cannot be the same',
+                error_too_short: 'City name must contain at least 2 characters',
+                error_too_long: 'City name is too long (maximum 50 characters)',
+                success_message: '✅ Search sent! Route: {start} → {end}',
+                success_alert: 'Search request sent! Await results in the bot.',
+                return_to_bot: 'Return to Bot',
+                error_prefix: '❌ Error: '
+            },
+            pl: {
+                title: '🔍 Wyszukiwanie podróży',
+                subtitle: 'Wybierz punkt początkowy i końcowy podróży',
+                from_label: '📍 Skąd',
+                to_label: '🎯 Dokąd',
+                from_placeholder: 'Wprowadź miasto wyjazdu',
+                to_placeholder: 'Wprowadź miasto docelowe',
+                swap_title: 'Zamień miejscami',
+                search_button: '🔍 Rozpocznij wyszukiwanie',
+                examples_title: '💡 Przykłady tras:',
+                examples_text: '• Kijów → Warszawa<br>• Lwów → Kraków<br>• Odessa → Bukareszt<br>• Charków → Bratysława',
+                processing: 'Przetwarzanie żądania...',
+                processing_button: 'Przetwarzanie...',
+                error_fill_both: 'Wypełnij oba pola',
+                error_same_cities: 'Miasto początkowe i końcowe nie mogą być takie same',
+                error_too_short: 'Nazwa miasta musi zawierać co najmniej 2 znaki',
+                error_too_long: 'Nazwa miasta jest za długa (maksymalnie 50 znaków)',
+                success_message: '✅ Wyszukiwanie wysłane! Trasa: {start} → {end}',
+                success_alert: 'Żądanie wyszukiwania wysłane! Oczekuj wyników w bocie.',
+                return_to_bot: 'Powrót do bota',
+                error_prefix: '❌ Błąd: '
+            },
+            de: {
+                title: '🔍 Reisesuche',
+                subtitle: 'Wählen Sie Start- und Endpunkt Ihrer Reise',
+                from_label: '📍 Von',
+                to_label: '🎯 Nach',
+                from_placeholder: 'Abfahrtsstadt eingeben',
+                to_placeholder: 'Zielstadt eingeben',
+                swap_title: 'Plätze tauschen',
+                search_button: '🔍 Suche starten',
+                examples_title: '💡 Routenbeispiele:',
+                examples_text: '• Kiew → Warschau<br>• Lwiw → Krakau<br>• Odessa → Bukarest<br>• Charkiw → Bratislava',
+                processing: 'Anfrage wird bearbeitet...',
+                processing_button: 'Bearbeitung...',
+                error_fill_both: 'Bitte füllen Sie beide Felder aus',
+                error_same_cities: 'Start- und Zielstadt können nicht gleich sein',
+                error_too_short: 'Stadtname muss mindestens 2 Zeichen enthalten',
+                error_too_long: 'Stadtname ist zu lang (maximal 50 Zeichen)',
+                success_message: '✅ Suche gesendet! Route: {start} → {end}',
+                success_alert: 'Suchanfrage gesendet! Erwarten Sie Ergebnisse im Bot.',
+                return_to_bot: 'Zurück zum Bot',
+                error_prefix: '❌ Fehler: '
+            },
+            cs: {
+                title: '🔍 Vyhledávání cesty',
+                subtitle: 'Vyberte počáteční a koncový bod cesty',
+                from_label: '📍 Odkud',
+                to_label: '🎯 Kam',
+                from_placeholder: 'Zadejte město odjezdu',
+                to_placeholder: 'Zadejte cílové město',
+                swap_title: 'Prohodit místa',
+                search_button: '🔍 Začít hledání',
+                examples_title: '💡 Příklady tras:',
+                examples_text: '• Kyjev → Varšava<br>• Lvov → Krakov<br>• Odesa → Bukurešť<br>• Charkov → Bratislava',
+                processing: 'Zpracování požadavku...',
+                processing_button: 'Zpracování...',
+                error_fill_both: 'Vyplňte prosím obě pole',
+                error_same_cities: 'Počáteční a cílové město nemohou být stejné',
+                error_too_short: 'Název města musí obsahovat alespoň 2 znaky',
+                error_too_long: 'Název města je příliš dlouhý (maximálně 50 znaků)',
+                success_message: '✅ Vyhledávání odesláno! Trasa: {start} → {end}',
+                success_alert: 'Požadavek na vyhledávání odeslán! Očekávejte výsledky v botu.',
+                return_to_bot: 'Zpět do bota',
+                error_prefix: '❌ Chyba: '
+            },
+            bg: {
+                title: '🔍 Търсене на пътуване',
+                subtitle: 'Изберете начална и крайна точка на пътуването',
+                from_label: '📍 Откъде',
+                to_label: '🎯 Накъде',
+                from_placeholder: 'Въведете град на заминаване',
+                to_placeholder: 'Въведете град на дестинация',
+                swap_title: 'Размени местата',
+                search_button: '🔍 Започни търсене',
+                examples_title: '💡 Примери за маршрути:',
+                examples_text: '• Киев → Варшава<br>• Лвов → Краков<br>• Одеса → Букурещ<br>• Харков → Братислава',
+                processing: 'Обработване на заявката...',
+                processing_button: 'Обработване...',
+                error_fill_both: 'Моля, попълнете и двете полета',
+                error_same_cities: 'Началният и крайният град не могат да бъдат еднакви',
+                error_too_short: 'Името на града трябва да съдържа поне 2 символа',
+                error_too_long: 'Името на града е прекалено дълго (максимум 50 символа)',
+                success_message: '✅ Търсенето е изпратено! Маршрут: {start} → {end}',
+                success_alert: 'Заявката за търсене е изпратена! Очаквайте резултати в бота.',
+                return_to_bot: 'Обратно в бота',
+                error_prefix: '❌ Грешка: '
+            },
+            ro: {
+                title: '🔍 Căutare călătorie',
+                subtitle: 'Selectați punctele de plecare și destinație',
+                from_label: '📍 De unde',
+                to_label: '🎯 Unde',
+                from_placeholder: 'Introduceți orașul de plecare',
+                to_placeholder: 'Introduceți orașul de destinație',
+                swap_title: 'Schimbă locurile',
+                search_button: '🔍 Începe căutarea',
+                examples_title: '💡 Exemple de rute:',
+                examples_text: '• Kiev → Varșovia<br>• Lviv → Cracovia<br>• Odesa → București<br>• Harkov → Bratislava',
+                processing: 'Procesarea cererii...',
+                processing_button: 'Procesare...',
+                error_fill_both: 'Vă rugăm să completați ambele câmpuri',
+                error_same_cities: 'Orașul de plecare și destinația nu pot fi aceleași',
+                error_too_short: 'Numele orașului trebuie să conțină cel puțin 2 caractere',
+                error_too_long: 'Numele orașului este prea lung (maxim 50 de caractere)',
+                success_message: '✅ Căutarea trimisă! Ruta: {start} → {end}',
+                success_alert: 'Cererea de căutare a fost trimisă! Așteptați rezultatele în bot.',
+                return_to_bot: 'Înapoi la bot',
+                error_prefix: '❌ Eroare: '
+            },
+            hu: {
+                title: '🔍 Utazás keresése',
+                subtitle: 'Válassza ki az utazás kiindulási és végpontját',
+                from_label: '📍 Honnan',
+                to_label: '🎯 Hova',
+                from_placeholder: 'Adja meg az indulási várost',
+                to_placeholder: 'Adja meg a célvárost',
+                swap_title: 'Helyek felcserélése',
+                search_button: '🔍 Keresés indítása',
+                examples_title: '💡 Útvonal példák:',
+                examples_text: '• Kijev → Varsó<br>• Lviv → Krakkó<br>• Odessza → Bukarest<br>• Harkiv → Pozsony',
+                processing: 'Kérés feldolgozása...',
+                processing_button: 'Feldolgozás...',
+                error_fill_both: 'Kérjük, töltse ki mindkét mezőt',
+                error_same_cities: 'A kiindulási és célváros nem lehet ugyanaz',
+                error_too_short: 'A város nevének legalább 2 karakterből kell állnia',
+                error_too_long: 'A város neve túl hosszú (maximum 50 karakter)',
+                success_message: '✅ Keresés elküldve! Útvonal: {start} → {end}',
+                success_alert: 'Keresési kérés elküldve! Várja az eredményeket a botban.',
+                return_to_bot: 'Vissza a bothoz',
+                error_prefix: '❌ Hiba: '
+            },
+            it: {
+                title: '🔍 Ricerca viaggio',
+                subtitle: 'Seleziona i punti di partenza e destinazione',
+                from_label: '📍 Da',
+                to_label: '🎯 A',
+                from_placeholder: 'Inserisci la città di partenza',
+                to_placeholder: 'Inserisci la città di destinazione',
+                swap_title: 'Scambia i luoghi',
+                search_button: '🔍 Inizia ricerca',
+                examples_title: '💡 Esempi di percorsi:',
+                examples_text: '• Kiev → Varsavia<br>• Lviv → Cracovia<br>• Odessa → Bucarest<br>• Kharkiv → Bratislava',
+                processing: 'Elaborazione della richiesta...',
+                processing_button: 'Elaborazione...',
+                error_fill_both: 'Si prega di compilare entrambi i campi',
+                error_same_cities: 'La città di partenza e destinazione non possono essere uguali',
+                error_too_short: 'Il nome della città deve contenere almeno 2 caratteri',
+                error_too_long: 'Il nome della città è troppo lungo (massimo 50 caratteri)',
+                success_message: '✅ Ricerca inviata! Percorso: {start} → {end}',
+                success_alert: 'Richiesta di ricerca inviata! Aspetta i risultati nel bot.',
+                return_to_bot: 'Torna al bot',
+                error_prefix: '❌ Errore: '
+            },
+            es: {
+                title: '🔍 Búsqueda de viaje',
+                subtitle: 'Selecciona los puntos de salida y destino',
+                from_label: '📍 Desde',
+                to_label: '🎯 Hasta',
+                from_placeholder: 'Introduce la ciudad de salida',
+                to_placeholder: 'Introduce la ciudad de destino',
+                swap_title: 'Intercambiar lugares',
+                search_button: '🔍 Iniciar búsqueda',
+                examples_title: '💡 Ejemplos de rutas:',
+                examples_text: '• Kiev → Varsovia<br>• Lviv → Cracovia<br>• Odesa → Bucarest<br>• Kharkiv → Bratislava',
+                processing: 'Procesando solicitud...',
+                processing_button: 'Procesando...',
+                error_fill_both: 'Por favor, completa ambos campos',
+                error_same_cities: 'La ciudad de origen y destino no pueden ser iguales',
+                error_too_short: 'El nombre de la ciudad debe contener al menos 2 caracteres',
+                error_too_long: 'El nombre de la ciudad es demasiado largo (máximo 50 caracteres)',
+                success_message: '✅ Búsqueda enviada! Ruta: {start} → {end}',
+                success_alert: 'Solicitud de búsqueda enviada! Espera los resultados en el bot.',
+                return_to_bot: 'Volver al bot',
+                error_prefix: '❌ Error: '
+            }
+        };
+
+        // Ініціалізація Telegram Web App
+        const tg = window.Telegram?.WebApp;
+        let userId = null;
+        let userLang = 'uk';
+
+        // Отримуємо параметри з URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userIdFromUrl = urlParams.get('user_id');
+        const userLangFromUrl = urlParams.get('lang');
+        const webhookUrlFromUrl = urlParams.get('webhook_url');
+
+        // Налаштування теми
+        if (tg) {
+            tg.ready();
+            tg.expand();
+            
+            // Отримуємо дані користувача
+            if (tg.initDataUnsafe?.user) {
+                userId = tg.initDataUnsafe.user.id;
+                userLang = tg.initDataUnsafe.user.language_code || 'uk';
+            }
+            
+            // Налаштовуємо головну кнопку
+            tg.MainButton.hide();
+            
+            // Обробляємо закриття
+            tg.onEvent('mainButtonClicked', submitForm);
+        } 
+        
+        // Використовуємо параметри з URL якщо доступні
+        if (userIdFromUrl) {
+            userId = userIdFromUrl;
+        } else if (!userId) {
+            // Для тестування без Telegram та URL параметра
+            userId = 'test_user_' + Math.random().toString(36).substr(2, 9);
+            console.log('Тестовий режим, userId:', userId);
+        }
+        
+        if (userLangFromUrl) {
+            userLang = userLangFromUrl;
+        }
+        
+        // URL вебхука для відправки даних
+        const webhookUrl = webhookUrlFromUrl ? decodeURIComponent(webhookUrlFromUrl) + '/search_webhook' : 'http://139.59.208.152:8001/search_webhook';
+
+        // Функція для отримання перекладу
+        function t(key) {
+            const lang = userLang || 'uk';
+            const langTranslations = translations[lang] || translations['uk'];
+            return langTranslations[key] || translations['uk'][key] || key;
+        }
+
+        // Функція для оновлення інтерфейсу згідно з мовою
+        function updateInterface() {
+            document.querySelector('h1').textContent = t('title');
+            document.querySelector('.header p').textContent = t('subtitle');
+            document.querySelector('label[for="startCity"]').innerHTML = t('from_label');
+            document.querySelector('label[for="endCity"]').innerHTML = t('to_label');
+            document.getElementById('startCity').placeholder = t('from_placeholder');
+            document.getElementById('endCity').placeholder = t('to_placeholder');
+            document.querySelector('.swap-btn').title = t('swap_title');
+            document.getElementById('submitBtn').textContent = t('search_button');
+            document.querySelector('.example h3').textContent = t('examples_title');
+            document.querySelector('.example p').innerHTML = t('examples_text');
+            document.querySelector('.loading p').textContent = t('processing');
+        }
+
+        // Елементи форми
+        const form = document.getElementById('searchForm');
+        const startCityInput = document.getElementById('startCity');
+        const endCityInput = document.getElementById('endCity');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+        const successDiv = document.getElementById('success');
+        
+        // Елементи для підказок
+        const startCitySuggestions = document.getElementById('startCitySuggestions');
+        const endCitySuggestions = document.getElementById('endCitySuggestions');
+        
+        // Стан для автозаповнення
+        let searchTimeout;
+        let currentSuggestions = [];
+        let selectedSuggestionIndex = -1;
+        let activeSuggestionsContainer = null;
+
+        // Функція для показу помилки
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            successDiv.style.display = 'none';
+        }
+
+        // Функція для показу успіху
+        function showSuccess(message) {
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+        }
+
+        // Функція для приховування повідомлень
+        function hideMessages() {
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+        }
+        
+        // Функція для пошуку міст через різні API
+        async function searchCities(query) {
+            if (query.length < 2) return [];
+            
+            // Спочатку пробуємо популярні міста
+            const popularCities = getPopularCities(query);
+            if (popularCities.length > 0) {
+                return popularCities;
+            }
+            
+            try {
+                // Пробуємо OpenStreetMap Nominatim API
+                const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=8&addressdetails=1&accept-language=${userLang}`;
+                const response = await fetch(nominatimUrl, {
+                    headers: {
+                        'User-Agent': 'VizokBot/1.0'
+                    }
+                });
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    return data
+                        .filter(item => item.type === 'city' || item.type === 'town' || item.type === 'village' || item.class === 'place')
+                        .map(city => ({
+                            name: city.display_name.split(',')[0],
+                            country: city.address?.country || city.display_name.split(',').pop().trim(),
+                            fullName: city.display_name
+                        }))
+                        .slice(0, 8);
+                }
+                return [];
+            } catch (error) {
+                console.error('Помилка пошуку міст:', error);
+                return getPopularCities(query); // Fallback до популярних міст
+            }
+        }
+        
+        // Функція для пошуку серед популярних міст
+        function getPopularCities(query) {
+            const popularCities = [
+                { name: 'Київ', country: 'Україна' },
+                { name: 'Львів', country: 'Україна' },
+                { name: 'Одеса', country: 'Україна' },
+                { name: 'Харків', country: 'Україна' },
+                { name: 'Дніпро', country: 'Україна' },
+                { name: 'Запоріжжя', country: 'Україна' },
+                { name: 'Кривий Ріг', country: 'Україна' },
+                { name: 'Миколаїв', country: 'Україна' },
+                { name: 'Маріуполь', country: 'Україна' },
+                { name: 'Луганськ', country: 'Україна' },
+                { name: 'Вінниця', country: 'Україна' },
+                { name: 'Макіївка', country: 'Україна' },
+                { name: 'Сімферополь', country: 'Україна' },
+                { name: 'Херсон', country: 'Україна' },
+                { name: 'Полтава', country: 'Україна' },
+                { name: 'Чернігів', country: 'Україна' },
+                { name: 'Черкаси', country: 'Україна' },
+                { name: 'Житомир', country: 'Україна' },
+                { name: 'Суми', country: 'Україна' },
+                { name: 'Хмельницький', country: 'Україна' },
+                { name: 'Чернівці', country: 'Україна' },
+                { name: 'Рівне', country: 'Україна' },
+                { name: 'Кропивницький', country: 'Україна' },
+                { name: 'Івано-Франківськ', country: 'Україна' },
+                { name: 'Кременчук', country: 'Україна' },
+                { name: 'Тернопіль', country: 'Україна' },
+                { name: 'Луцьк', country: 'Україна' },
+                { name: 'Біла Церква', country: 'Україна' },
+                { name: 'Краматорськ', country: 'Україна' },
+                { name: 'Мелітополь', country: 'Україна' },
+                { name: 'Ковель', country: 'Україна' },
+                { name: 'Ужгород', country: 'Україна' },
+                { name: 'Варшава', country: 'Польща' },
+                { name: 'Краків', country: 'Польща' },
+                { name: 'Гданськ', country: 'Польща' },
+                { name: 'Вроцлав', country: 'Польща' },
+                { name: 'Познань', country: 'Польща' },
+                { name: 'Лодзь', country: 'Польща' },
+                { name: 'Катовіце', country: 'Польща' },
+                { name: 'Бидгощ', country: 'Польща' },
+                { name: 'Люблін', country: 'Польща' },
+                { name: 'Білосток', country: 'Польща' },
+                { name: 'Берлін', country: 'Німеччина' },
+                { name: 'Мюнхен', country: 'Німеччина' },
+                { name: 'Гамбург', country: 'Німеччина' },
+                { name: 'Кельн', country: 'Німеччина' },
+                { name: 'Франкфурт', country: 'Німеччина' },
+                { name: 'Дюссельдорф', country: 'Німеччина' },
+                { name: 'Дортмунд', country: 'Німеччина' },
+                { name: 'Ессен', country: 'Німеччина' },
+                { name: 'Лейпциг', country: 'Німеччина' },
+                { name: 'Бремен', country: 'Німеччина' },
+                { name: 'Прага', country: 'Чехія' },
+                { name: 'Брно', country: 'Чехія' },
+                { name: 'Острава', country: 'Чехія' },
+                { name: 'Пльзень', country: 'Чехія' },
+                { name: 'Будапешт', country: 'Угорщина' },
+                { name: 'Дебрецен', country: 'Угорщина' },
+                { name: 'Сегед', country: 'Угорщина' },
+                { name: 'Мішкольц', country: 'Угорщина' },
+                { name: 'Бухарест', country: 'Румунія' },
+                { name: 'Клуж-Напока', country: 'Румунія' },
+                { name: 'Тімішоара', country: 'Румунія' },
+                { name: 'Яси', country: 'Румунія' },
+                { name: 'Констанца', country: 'Румунія' },
+                { name: 'Братислава', country: 'Словаччина' },
+                { name: 'Кошице', country: 'Словаччина' }
+            ];
+            
+            const lowerQuery = query.toLowerCase();
+            return popularCities
+                .filter(city => city.name.toLowerCase().includes(lowerQuery))
+                .slice(0, 8);
+        }
+        
+        // Функція для показу підказок
+        function showSuggestions(suggestions, container, input) {
+            container.innerHTML = '';
+            currentSuggestions = suggestions;
+            selectedSuggestionIndex = -1;
+            activeSuggestionsContainer = container;
+            
+            if (suggestions.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            suggestions.forEach((suggestion, index) => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.innerHTML = `
+                    <div class="suggestion-city">${suggestion.name}</div>
+                    <div class="suggestion-country">${suggestion.country}</div>
+                `;
+                
+                div.addEventListener('click', () => {
+                    input.value = suggestion.name;
+                    container.style.display = 'none';
+                    input.focus();
+                });
+                
+                container.appendChild(div);
+            });
+            
+            container.style.display = 'block';
+        }
+        
+        // Функція для приховування підказок
+        function hideSuggestions() {
+            startCitySuggestions.style.display = 'none';
+            endCitySuggestions.style.display = 'none';
+            activeSuggestionsContainer = null;
+        }
+        
+        // Функція для навігації по підказках клавіатурою
+        function navigateSuggestions(direction) {
+            if (!activeSuggestionsContainer || currentSuggestions.length === 0) return;
+            
+            const items = activeSuggestionsContainer.querySelectorAll('.suggestion-item');
+            
+            // Прибираємо попередній вибір
+            if (selectedSuggestionIndex >= 0) {
+                items[selectedSuggestionIndex].classList.remove('selected');
+            }
+            
+            // Рахуємо новий індекс
+            if (direction === 'down') {
+                selectedSuggestionIndex = (selectedSuggestionIndex + 1) % items.length;
+            } else if (direction === 'up') {
+                selectedSuggestionIndex = selectedSuggestionIndex <= 0 ? items.length - 1 : selectedSuggestionIndex - 1;
+            }
+            
+            // Додаємо новий вибір
+            items[selectedSuggestionIndex].classList.add('selected');
+        }
+        
+        // Функція для вибору поточної підказки
+        function selectCurrentSuggestion(input) {
+            if (selectedSuggestionIndex >= 0 && currentSuggestions[selectedSuggestionIndex]) {
+                input.value = currentSuggestions[selectedSuggestionIndex].name;
+                hideSuggestions();
+                return true;
+            }
+            return false;
+        }
+
+        // Функція обміну міст місцями
+        function swapCities() {
+            const startValue = startCityInput.value;
+            const endValue = endCityInput.value;
+            
+            startCityInput.value = endValue;
+            endCityInput.value = startValue;
+            
+            // Анімація
+            const swapBtn = document.querySelector('.swap-btn');
+            swapBtn.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                swapBtn.style.transform = 'rotate(0deg)';
+            }, 300);
+        }
+
+        // Валідація міст
+        function validateCities(startCity, endCity) {
+            if (!startCity.trim() || !endCity.trim()) {
+                throw new Error(t('error_fill_both'));
+            }
+            
+            if (startCity.trim().toLowerCase() === endCity.trim().toLowerCase()) {
+                throw new Error(t('error_same_cities'));
+            }
+            
+            if (startCity.length < 2 || endCity.length < 2) {
+                throw new Error(t('error_too_short'));
+            }
+            
+            if (startCity.length > 50 || endCity.length > 50) {
+                throw new Error(t('error_too_long'));
+            }
+        }
+
+        // Відправка форми
+        async function submitForm() {
+            try {
+                hideMessages();
+                
+                const startCity = startCityInput.value.trim();
+                const endCity = endCityInput.value.trim();
+                
+                // Валідація
+                validateCities(startCity, endCity);
+                
+                // Показуємо завантаження
+                loading.style.display = 'block';
+                submitBtn.disabled = true;
+                submitBtn.textContent = t('processing_button');
+                
+                // Підготовка даних
+                const searchData = {
+                    user_id: userId.toString(),
+                    start_city: startCity,
+                    end_city: endCity,
+                    lang: userLang,
+                    timestamp: new Date().toISOString()
+                };
+                
+                console.log('Відправляємо дані пошуку:', searchData);
+                console.log('Webhook URL:', webhookUrl);
+                
+                // Відправка на webhook
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(searchData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('Відповідь сервера:', result);
+                
+                showSuccess(t('success_message').replace('{start}', startCity).replace('{end}', endCity));
+                
+                // Додаємо кнопку "Повернутися в бот" одразу після успішної відправки
+                const returnToBotButton = document.createElement('button');
+                returnToBotButton.textContent = t('return_to_bot') || 'Повернутися в бот';
+                returnToBotButton.className = 'submit-btn';
+                returnToBotButton.style.marginTop = '15px';
+                returnToBotButton.style.backgroundColor = '#28a745';
+                returnToBotButton.style.color = 'white';
+                returnToBotButton.style.border = 'none';
+                returnToBotButton.style.borderRadius = '8px';
+                returnToBotButton.style.padding = '12px 24px';
+                returnToBotButton.style.fontSize = '16px';
+                returnToBotButton.style.fontWeight = 'bold';
+                returnToBotButton.style.cursor = 'pointer';
+                returnToBotButton.style.transition = 'all 0.3s ease';
+                returnToBotButton.style.boxShadow = '0 2px 8px rgba(40, 167, 69, 0.3)';
+                returnToBotButton.style.marginRight = '10px';
+                
+                // Додаємо hover ефект
+                returnToBotButton.onmouseover = () => {
+                    returnToBotButton.style.backgroundColor = '#218838';
+                    returnToBotButton.style.transform = 'translateY(-2px)';
+                    returnToBotButton.style.boxShadow = '0 4px 12px rgba(40, 167, 69, 0.4)';
+                };
+                returnToBotButton.onmouseout = () => {
+                    returnToBotButton.style.backgroundColor = '#28a745';
+                    returnToBotButton.style.transform = 'translateY(0)';
+                    returnToBotButton.style.boxShadow = '0 2px 8px rgba(40, 167, 69, 0.3)';
+                };
+                
+                returnToBotButton.onclick = () => {
+                    if (tg) {
+                        // Спробуємо відкрити бот через різні методи
+                        try {
+                            if (tg.openTelegramLink) {
+                                tg.openTelegramLink('https://t.me/VizokUAbot');
+                            } else if (tg.openLink) {
+                                tg.openLink('https://t.me/VizokUAbot');
+                            } else {
+                                // Спробуємо через tg:// протокол
+                                window.location.href = 'tg://resolve?domain=VizokUAbot';
+                            }
+                        } catch (error) {
+                            console.error('Помилка відкриття бота:', error);
+                            // Fallback - закриваємо веб-додаток
+                            tg.close();
+                        }
+                    } else {
+                        // Для браузера відкриваємо бот в новій вкладці
+                        window.open('https://t.me/VizokUAbot', '_blank');
+                    }
+                };
+                
+                // Створюємо контейнер для кнопок
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.display = 'flex';
+                buttonContainer.style.flexWrap = 'wrap';
+                buttonContainer.style.gap = '10px';
+                buttonContainer.style.justifyContent = 'center';
+                buttonContainer.style.marginTop = '15px';
+                
+                buttonContainer.appendChild(returnToBotButton);
+                
+                // Повідомляємо Telegram про успіх
+                if (tg) {
+                    // Показуємо кнопку "Повернутися в бот"
+                    tg.MainButton.setText('🤖 Перейти в бот VizokUA');
+                    tg.MainButton.show();
+                    tg.MainButton.onClick(() => {
+                        // Спробуємо відкрити бот в Telegram
+                        try {
+                            if (tg.openTelegramLink) {
+                                tg.openTelegramLink('https://t.me/VizokUAbot');
+                            } else if (tg.openLink) {
+                                tg.openLink('https://t.me/VizokUAbot');
+                            } else {
+                                // Спробуємо через tg:// протокол
+                                window.location.href = 'tg://resolve?domain=VizokUAbot';
+                            }
+                        } catch (error) {
+                            console.error('Помилка відкриття бота:', error);
+                            // Fallback - просто закриваємо веб-додаток
+                            tg.close();
+                        }
+                    });
+                } else {
+                    // Для браузера показуємо кнопку посилання на бот
+                    const botLinkButton = document.createElement('button');
+                    botLinkButton.textContent = '🤖 Перейти в бот VizokUA';
+                    botLinkButton.className = 'submit-btn';
+                    botLinkButton.style.backgroundColor = '#0088cc';
+                    botLinkButton.style.color = 'white';
+                    botLinkButton.style.border = 'none';
+                    botLinkButton.style.borderRadius = '8px';
+                    botLinkButton.style.padding = '12px 24px';
+                    botLinkButton.style.fontSize = '16px';
+                    botLinkButton.style.fontWeight = 'bold';
+                    botLinkButton.style.cursor = 'pointer';
+                    botLinkButton.style.transition = 'all 0.3s ease';
+                    botLinkButton.style.boxShadow = '0 2px 8px rgba(0, 136, 204, 0.3)';
+                    
+                    // Додаємо hover ефект
+                    botLinkButton.onmouseover = () => {
+                        botLinkButton.style.backgroundColor = '#006699';
+                        botLinkButton.style.transform = 'translateY(-2px)';
+                        botLinkButton.style.boxShadow = '0 4px 12px rgba(0, 136, 204, 0.4)';
+                    };
+                    botLinkButton.onmouseout = () => {
+                        botLinkButton.style.backgroundColor = '#0088cc';
+                        botLinkButton.style.transform = 'translateY(0)';
+                        botLinkButton.style.boxShadow = '0 2px 8px rgba(0, 136, 204, 0.3)';
+                    };
+                    
+                    botLinkButton.onclick = () => {
+                        window.open('https://t.me/VizokUAbot', '_blank');
+                    };
+                    
+                    buttonContainer.appendChild(botLinkButton);
+                }
+                
+                document.querySelector('.container').appendChild(buttonContainer);
+                
+                // Очищуємо форму
+                form.reset();
+                
+            } catch (error) {
+                console.error('Помилка відправки:', error);
+                console.error('Webhook URL:', webhookUrl);
+                console.error('User ID:', userId);
+                console.error('Language:', userLang);
+                
+                let errorMessage = t('error_prefix') + error.message;
+                
+                // Додаткова інформація для діагностики
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage += '\n\nДіагностична інформація:\n';
+                    errorMessage += `URL: ${webhookUrl}\n`;
+                    errorMessage += `User ID: ${userId}\n`;
+                    errorMessage += 'Можливі причини:\n';
+                    errorMessage += '- Сервер недоступний\n';
+                    errorMessage += '- Проблеми з CORS\n';
+                    errorMessage += '- Неправильний URL';
+                }
+                
+                showError(errorMessage);
+                
+                if (tg) {
+                    tg.showAlert(errorMessage);
+                }
+            } finally {
+                // Приховуємо завантаження
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+                submitBtn.textContent = t('search_button');
+            }
+        }
+
+        // Обробник форми
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitForm();
+        });
+
+        // Автоматичне приховування повідомлень при введенні
+        [startCityInput, endCityInput].forEach(input => {
+            input.addEventListener('input', hideMessages);
+        });
+
+        // Обробка клавіш та автозаповнення для початкового міста
+        startCityInput.addEventListener('input', async (e) => {
+            const query = e.target.value.trim();
+            
+            clearTimeout(searchTimeout);
+            
+            if (query.length < 2) {
+                hideSuggestions();
+                return;
+            }
+            
+            searchTimeout = setTimeout(async () => {
+                const suggestions = await searchCities(query);
+                showSuggestions(suggestions, startCitySuggestions, startCityInput);
+            }, 300);
+        });
+
+        // Обробка клавіш та автозаповнення для кінцевого міста
+        endCityInput.addEventListener('input', async (e) => {
+            const query = e.target.value.trim();
+            
+            clearTimeout(searchTimeout);
+            
+            if (query.length < 2) {
+                hideSuggestions();
+                return;
+            }
+            
+            searchTimeout = setTimeout(async () => {
+                const suggestions = await searchCities(query);
+                showSuggestions(suggestions, endCitySuggestions, endCityInput);
+            }, 300);
+        });
+
+        // Обробка клавіш для навігації та вибору
+        [startCityInput, endCityInput].forEach(input => {
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    navigateSuggestions('down');
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    navigateSuggestions('up');
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (!selectCurrentSuggestion(input)) {
+                        submitForm();
+                    }
+                } else if (e.key === 'Escape') {
+                    hideSuggestions();
+                }
+            });
+            
+            input.addEventListener('blur', () => {
+                // Затримка для обробки кліку по підказці
+                setTimeout(hideSuggestions, 150);
+            });
+        });
+
+        // Приховування підказок при кліку поза ними
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.city-input-container')) {
+                hideSuggestions();
+            }
+        });
+
+        // Оновлюємо інтерфейс згідно з мовою користувача
+        updateInterface();
+        
+        console.log('Сторінка пошуку поїздки ініціалізована');
+        console.log('User ID:', userId, 'Language:', userLang);
+    </script>
+</body>
+</html> 

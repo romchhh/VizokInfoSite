@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      "name": "ngrok-webhook",
+      "script": "ngrok",
+      "args": "http 8001 --log stdout",
+      "cwd": "/root",
+      "instances": 1,
+      "autorestart": true,
+      "watch": false,
+      "max_memory_restart": "1G",
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "log_file": "/var/log/ngrok-webhook.log",
+      "out_file": "/var/log/ngrok-webhook-out.log",
+      "error_file": "/var/log/ngrok-webhook-error.log",
+      "merge_logs": true,
+      "time": true
+    }
+  ]
+} 

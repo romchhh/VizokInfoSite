@@ -1,0 +1,330 @@
+/* SearchRoute Component Styles */
+.search-route-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.search-route-wrapper {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.search-route-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.search-route-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--tg-theme-text-color, #000000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.search-route-header p {
+    font-size: 16px;
+    color: var(--tg-theme-hint-color, #999999);
+    line-height: 1.4;
+}
+
+.search-route-form {
+    background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+}
+
+.search-route-form-group {
+    margin-bottom: 8px;
+}
+
+.search-route-form-group label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--tg-theme-text-color, #000000);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-route-city-input-container {
+    position: relative;
+}
+
+.search-route-input-group {
+    position: relative;
+}
+
+.search-route-input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: var(--tg-theme-hint-color, #999999);
+    z-index: 1;
+}
+
+.search-route-city-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid var(--tg-theme-button-color, #0088cc);
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    background: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.search-route-city-input.with-icon {
+    padding-left: 50px;
+}
+
+.search-route-city-input:focus {
+    outline: none;
+    border-color: var(--tg-theme-button-color, #0088cc);
+    box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.1);
+}
+
+.search-route-city-input::placeholder {
+    color: var(--tg-theme-hint-color, #999999);
+}
+
+.search-route-arrow-container {
+    display: flex;
+    justify-content: center;
+    margin: 8px 0;
+}
+
+.search-route-swap-btn {
+    background: transparent;
+    border: 2px solid var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-color, #0088cc);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-route-swap-btn:hover {
+    background: var(--tg-theme-button-color, #0088cc);
+    color: white;
+    transform: rotate(180deg);
+}
+
+.search-route-city-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--tg-theme-bg-color, #ffffff);
+    border: 2px solid var(--tg-theme-button-color, #0088cc);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.search-route-suggestion-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s ease;
+    color: var(--tg-theme-text-color, #000000);
+}
+
+.search-route-suggestion-item:hover,
+.search-route-suggestion-item.selected {
+    background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+}
+
+.search-route-suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.search-route-suggestion-city {
+    font-weight: 600;
+}
+
+.search-route-suggestion-country {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color, #999999);
+}
+
+.search-route-submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.search-route-submit-btn:hover {
+    background: var(--tg-theme-button-color, #006699);
+    transform: translateY(-1px);
+}
+
+.search-route-submit-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.search-route-example {
+    background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 15px;
+    border-left: 4px solid var(--tg-theme-button-color, #0088cc);
+}
+
+.search-route-example h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--tg-theme-text-color, #000000);
+}
+
+.search-route-example p {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color, #666666);
+    line-height: 1.4;
+}
+
+.search-route-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+}
+
+.search-route-loading-spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--tg-theme-button-color, #0088cc);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: search-route-spin 1s linear infinite;
+    margin: 0 auto 10px;
+}
+
+@keyframes search-route-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.search-route-error {
+    background: #ffe6e6;
+    color: #cc0000;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    border: 1px solid #ffcccc;
+}
+
+.search-route-success {
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.search-route-success-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.search-route-success-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.search-route-return-btn {
+    background: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, white);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+    width: 100%;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    box-sizing: border-box;
+    transition: opacity 0.2s ease;
+}
+
+.search-route-return-btn:hover {
+    opacity: 0.9;
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+    .search-route-container {
+        padding: 15px;
+    }
+    
+    .search-route-header h1 {
+        font-size: 20px;
+    }
+    
+    .search-route-city-input {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
+
+/* Focus states for accessibility */
+.search-route-city-input:focus,
+.search-route-swap-btn:focus,
+.search-route-submit-btn:focus {
+    outline: 2px solid var(--tg-theme-button-color, #0088cc);
+    outline-offset: 2px;
+}
+
+/* Animation for suggestions */
+.search-route-city-suggestions {
+    animation: search-route-slideDown 0.3s ease-out;
+}
+
+@keyframes search-route-slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} 
